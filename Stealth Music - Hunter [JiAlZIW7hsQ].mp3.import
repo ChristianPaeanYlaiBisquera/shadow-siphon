@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dt347eel6dn4g"
+path="res://.godot/imported/Stealth Music - Hunter [JiAlZIW7hsQ].mp3-bbceb3b0ca62d77d2375cc29e28da333.mp3str"
+
+[deps]
+
+source_file="res://Stealth Music - Hunter [JiAlZIW7hsQ].mp3"
+dest_files=["res://.godot/imported/Stealth Music - Hunter [JiAlZIW7hsQ].mp3-bbceb3b0ca62d77d2375cc29e28da333.mp3str"]
+
+[params]
+
+loop=true
+loop_offset=0.0
+bpm=0.0
+beat_count=0
+bar_beats=4

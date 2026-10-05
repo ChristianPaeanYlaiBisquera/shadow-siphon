@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cigatxa22vrvc"
+path="res://.godot/imported/Metal Gear Solid Snake 1 Theme (with alert) [7tWNnGrSOPo].mp3-cb885eb4a1ac6af9bb795fa8d799bb9e.mp3str"
+
+[deps]
+
+source_file="res://Metal Gear Solid Snake 1 Theme (with alert) [7tWNnGrSOPo].mp3"
+dest_files=["res://.godot/imported/Metal Gear Solid Snake 1 Theme (with alert) [7tWNnGrSOPo].mp3-cb885eb4a1ac6af9bb795fa8d799bb9e.mp3str"]
+
+[params]
+
+loop=true
+loop_offset=0.0
+bpm=0.0
+beat_count=0
+bar_beats=4
