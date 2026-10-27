@@ -8,6 +8,7 @@ extends Node3D
 @export var mat_active: Material     # PBR state B (e.g. glowing / green)
 @export var sfx: AudioStreamPlayer3D
 @export var burst: GPUParticles3D
+@export var prompt_height := 1.6     # how high above the switch the "Press E" bubble floats
 
 var activated := false
 
@@ -35,3 +36,14 @@ func interact() -> void:
 	var g = get_tree().get_first_node_in_group("game")
 	if g:
 		g.switch_activated()
+
+
+# ---- "Press E" bubble (read by player.gd) ----
+func prompt_text() -> String:
+	if activated:
+		return ""                      # nothing to show once it's already on
+	return "Press E to activate"
+
+
+func prompt_position() -> Vector3:
+	return global_position + Vector3.UP * prompt_height

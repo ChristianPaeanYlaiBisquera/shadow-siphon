@@ -12,11 +12,17 @@ extends CharacterBody3D
 @export var interact_range := 2.2
 @export var model: Node3D
 @export var anim_tree: AnimationTree
+@export var max_health := 100.0
+@export var iframe_time := 1.0     # seconds of invulnerability after a hit (the model blinks white)
 
 var is_lit := false        # true when a lit lamp is shining on the player
 var is_sneaking := false
 var active := true         # set to false on win / lose
+var health := 100.0        # current health; 0 = game over
 var _acting := false
+var _iframes := 0.0                # invulnerability time left
+var _blink_mat := StandardMaterial3D.new()
+var _meshes: Array[Node] = []      # the model's meshes, flashed white during i-frames
 var _gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 
@@ -26,7 +32,11 @@ func _enter_tree() -> void:
 
 
 func _ready() -> void:
+	health = max_health
 	_setup_input()
+	_blink_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED   # plain white, albedo defaults to white
+	if model:
+		_meshes = model.find_children("*", "MeshInstance3D", true, false)
 	if anim_tree:
 		anim_tree.active = true
 
@@ -46,6 +56,16 @@ func _setup_input() -> void:
 			InputMap.action_add_event(action, ev)
 
 
+# Blinks the model white while invulnerable (8 flashes per second, starting "on" at the hit).
+func _process(delta: float) -> void:
+	if _iframes <= 0.0:
+		return
+	_iframes = maxf(_iframes - delta, 0.0)
+	var overlay: Material = _blink_mat if int(_iframes * 16.0) % 2 == 1 else null
+	for m in _meshes:
+		(m as MeshInstance3D).material_overlay = overlay
+
+
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y -= _gravity * delta
@@ -54,6 +74,7 @@ func _physics_process(delta: float) -> void:
 		velocity.x = 0.0
 		velocity.z = 0.0
 		move_and_slide()
+		_hide_prompt()
 		return
 
 	var input := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
@@ -75,9 +96,24 @@ func _physics_process(delta: float) -> void:
 		_travel("Walk" if moving else "Idle")
 
 	is_lit = _check_lit()
+	_update_prompt()
 
 	if Input.is_action_just_pressed("interact"):
 		_try_interact()
+
+
+# Called by the guard when an attack lands.
+func take_damage(amount: float) -> void:
+	if not active or health <= 0.0 or _iframes > 0.0:
+		return
+	health = maxf(health - amount, 0.0)
+	_iframes = iframe_time
+	var g = get_tree().get_first_node_in_group("game")
+	if g:
+		g.flash_damage()
+		g.hit_effect(global_position + Vector3.UP)
+		if health <= 0.0:
+			g.lose()
 
 
 func _check_lit() -> bool:
@@ -87,7 +123,7 @@ func _check_lit() -> bool:
 	return false
 
 
-func _try_interact() -> void:
+func _nearest_interactable() -> Node3D:
 	var best: Node3D = null
 	var best_d := interact_range
 	for n in get_tree().get_nodes_in_group("interactable"):
@@ -96,6 +132,33 @@ func _try_interact() -> void:
 		if d < best_d:
 			best_d = d
 			best = node
+	return best
+
+
+# Shows the "Press E" bubble over whatever lamp / switch is in reach.
+func _update_prompt() -> void:
+	var g = get_tree().get_first_node_in_group("game")
+	if g == null:
+		return
+	var target := _nearest_interactable()
+	if target == null or _acting or not target.has_method("prompt_text"):
+		g.hide_prompt()
+		return
+	var text: String = target.prompt_text()
+	if text == "":
+		g.hide_prompt()
+		return
+	g.show_prompt(text, target.prompt_position())
+
+
+func _hide_prompt() -> void:
+	var g = get_tree().get_first_node_in_group("game")
+	if g:
+		g.hide_prompt()
+
+
+func _try_interact() -> void:
+	var best := _nearest_interactable()
 	if best == null:
 		return
 	_acting = true

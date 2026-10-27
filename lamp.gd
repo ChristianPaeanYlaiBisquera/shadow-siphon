@@ -12,6 +12,7 @@ extends Node3D
 @export var mat_off: Material     # PBR material: dark / dim state
 @export var sfx: AudioStreamPlayer3D
 @export var burst: GPUParticles3D
+@export var prompt_height := 2.2     # how high above the lamp the "Press E" bubble floats
 
 var is_on := true
 
@@ -65,3 +66,12 @@ func illuminates(point: Vector3) -> bool:
 		ex.append((n as CollisionObject3D).get_rid())
 	q.exclude = ex
 	return get_world_3d().direct_space_state.intersect_ray(q).is_empty()
+
+
+# ---- "Press E" bubble (read by player.gd) ----
+func prompt_text() -> String:
+	return "Press E to turn OFF" if is_on else "Press E to turn ON"
+
+
+func prompt_position() -> Vector3:
+	return global_position + Vector3.UP * prompt_height
