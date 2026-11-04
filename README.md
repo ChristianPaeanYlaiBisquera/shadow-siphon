@@ -16,7 +16,7 @@ and lure the guard away from your path.
 
 **Lose:** the guard hits you down to 0 health (100 HP, 20 damage per hit). Each hit gives you
 1 second of invulnerability (the Protagonist blinks white), plus a red screen flash,
-a spark burst and a short camera shake.
+a spark burst, a hit sound and a short camera shake.
 
 ## Controls
 
@@ -78,7 +78,7 @@ godot --headless --path . --export-release "Windows Desktop"
 * **Lighting drives detection.** `lamp.gd` exposes `illuminates(point)`, which checks radius and uses a raycast so walls block the light. `player.gd` asks every lamp each physics frame whether the player is lit.
 * **Guard state machine** (`antagonist.gd`): `PATROL -> CHASE -> ATTACK`. If the player escapes: `CHASE -> INVESTIGATE -> PATROL`. Pressing E on a lamp within its 14 m hearing range sends the guard to `INVESTIGATE`, unless he is already chasing or attacking.
 * **Attack and damage:** within 1.6 m with a clear line, the guard stops and swings (0.4 s windup, 1.5 s cooldown). The hit only lands if the player is still within about 2.1 m with a clear line when the windup ends, so you can dodge by stepping away or behind cover. A landed hit calls `take_damage(20)` on the player.
-* **I-frames and hit feedback:** after a hit the player ignores damage for 1 second (`iframe_time` in `player.gd`) and the model blinks white. Each hit also triggers a red screen flash, an HP bar pulse, a spark burst and a camera shake (`hit_effect()` in `game.gd`).
+* **I-frames and hit feedback:** after a hit the player ignores damage for 1 second (`iframe_time` in `player.gd`) and the model blinks white. Each hit also triggers a red screen flash, an HP bar pulse, a spark burst, a hit sound and a camera shake (`hit_effect()` in `game.gd`).
 * **Perception rules:** while lit, the guard sees the player inside a 90 degree vision cone up to 9 m (60% of that when sneaking). In shadow, he only notices the player within 1.8 m. A raycast line-of-sight check means walls and props block vision.
 * **Pathfinding:** `NavigationAgent3D` on a baked `NavigationRegion3D`, so the guard walks around obstacles.
 * **Animation state machines:** both characters use an `AnimationTree` with `Idle`, `Walk` and `Action` states, driven from the scripts.
@@ -91,4 +91,4 @@ Blender (modeling, UV unwrap, rigging, weight painting, animation actions) -> gl
 
 ## Audio credits
 
-Third-party tracks used for this class demonstration only: *Stealth Music - Hunter*, the Metal Gear Solid alert sound and the Final Fantasy VII victory fanfare. Replace with royalty-free audio before any public release.
+Third-party tracks used for this class demonstration only: *Stealth Music - Hunter*, the Metal Gear Solid alert sound, the Final Fantasy VII victory fanfare and the Undertale attack hit sound effect. Replace with royalty-free audio before any public release.

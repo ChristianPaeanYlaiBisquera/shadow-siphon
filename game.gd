@@ -5,6 +5,7 @@ extends Node3D
 ## Win / Game Over show an overlay with Restart and Main Menu buttons.
 
 const MAIN_MENU := "res://main_menu.tscn"
+const HIT_SOUND := preload("res://undertale-attack-hit-sound-effect.mp3")
 
 @export var switches_needed := 2
 @export var exit_door: Node3D       # StaticBody3D that blocks the exit (slides down when opened)
@@ -266,7 +267,7 @@ func flash_damage() -> void:
 		t2.tween_property(_hp_root, "modulate", Color(1, 1, 1), 0.35)
 
 
-# Burst of sparks at pos + a short camera shake. Called when the guard's hit lands on the player.
+# Burst of sparks at pos + a hit sound + a short camera shake. Called when the guard's hit lands on the player.
 func hit_effect(pos: Vector3) -> void:
 	var sparks := CPUParticles3D.new()
 	sparks.one_shot = true
@@ -291,6 +292,11 @@ func hit_effect(pos: Vector3) -> void:
 	add_child(sparks)
 	sparks.global_position = pos
 	sparks.finished.connect(sparks.queue_free)
+	var sfx := AudioStreamPlayer.new()
+	sfx.stream = HIT_SOUND
+	sfx.finished.connect(sfx.queue_free)
+	add_child(sfx)
+	sfx.play()
 	_shake_camera(0.25, 0.35)
 
 
