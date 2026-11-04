@@ -87,7 +87,7 @@ godot --headless --path . --export-release "Windows Desktop"
 
 ## Asset pipeline
 
-Blender (modeling, UV unwrap, rigging, weight painting, animation actions) -> glTF 2.0 `.glb` export (one file per character, all actions exported) -> Godot import (materials, loop modes, collision, navigation mesh) -> Windows build.
+Blender (modeling, UV unwrap, rigging, weight painting, animation actions) -> glTF 2.0 `.glb` export (one file per character, only that character's Idle / Walk / Action animations) -> Godot import (materials, loop modes, collision, navigation mesh) -> Windows build.
 
 ## Audio credits
 
