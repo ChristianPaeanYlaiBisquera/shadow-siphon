@@ -12,6 +12,8 @@
 [ext_resource type="AudioStream" uid="uid://dt347eel6dn4g" path="res://Stealth Music - Hunter [JiAlZIW7hsQ].mp3" id="10_dg77c"]
 [ext_resource type="AudioStream" uid="uid://cigatxa22vrvc" path="res://Metal Gear Solid Snake 1 Theme (with alert) [7tWNnGrSOPo].mp3" id="11_ycdy4"]
 [ext_resource type="AudioStream" uid="uid://ebtc6g4wje4u" path="res://Final Fantasy VII - Victory Fanfare [HD] [rgUksX6eM0Y].mp3" id="12_w48qg"]
+[ext_resource type="StandardMaterial3D" path="res://materials/Switch_Damaged.tres" id="13_swd"]
+[ext_resource type="StandardMaterial3D" path="res://materials/Switch_Pristine.tres" id="14_swp"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4i36i"]
 radius = 0.4
@@ -542,15 +544,6 @@ shadow_mesh = SubResource("ArrayMesh_jwtgb")
 [sub_resource type="BoxShape3D" id="BoxShape3D_4i36i"]
 size = Vector3(40, 0.2, 40)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8uu40"]
-albedo_color = Color(0.32926062, 0.10022826, 0.06837834, 1)
-roughness = 0.8
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k0ndr"]
-albedo_color = Color(0, 0.7340737, 0.1582995, 1)
-emission_enabled = true
-emission = Color(0, 0.94509804, 0, 1)
-
 [sub_resource type="BoxMesh" id="BoxMesh_4i36i"]
 size = Vector3(0.6, 1, 0.3)
 
@@ -1019,8 +1012,8 @@ shape = SubResource("BoxShape3D_4i36i")
 transform = Transform3D(-2.4342471e-08, 0, 0.17697746, 0, 0.5912625, 0, -0.55689085, 0, -7.73593e-09, 5.417351, 0.89404297, -1.9922523)
 script = ExtResource("8_5vw27")
 mesh = NodePath("Panel")
-mat_inactive = SubResource("StandardMaterial3D_8uu40")
-mat_active = SubResource("StandardMaterial3D_k0ndr")
+mat_inactive = ExtResource("13_swd")
+mat_active = ExtResource("14_swp")
 
 [node name="Panel" type="MeshInstance3D" parent="Switch1" unique_id=982598887]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
@@ -1030,8 +1023,8 @@ mesh = SubResource("BoxMesh_4i36i")
 transform = Transform3D(-2.4342471e-08, 0, 0.17697746, 0, 0.5912625, 0, -0.55689085, 0, -7.73593e-09, 5.417351, 0.89404297, 2.4875183)
 script = ExtResource("8_5vw27")
 mesh = NodePath("Panel")
-mat_inactive = SubResource("StandardMaterial3D_8uu40")
-mat_active = SubResource("StandardMaterial3D_k0ndr")
+mat_inactive = ExtResource("13_swd")
+mat_active = ExtResource("14_swp")
 
 [node name="Panel" type="MeshInstance3D" parent="Switch2" unique_id=1245978936]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)

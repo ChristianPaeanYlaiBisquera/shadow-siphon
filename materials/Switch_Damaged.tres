@@ -1,0 +1,19 @@
+[gd_resource type="StandardMaterial3D" load_steps=6 format=3]
+
+[ext_resource type="Texture2D" path="res://textures/switch/Switch_Damaged_Albedo.png" id="1_alb"]
+[ext_resource type="Texture2D" path="res://textures/switch/Switch_Damaged_Normal.png" id="2_nrm"]
+[ext_resource type="Texture2D" path="res://textures/switch/Switch_Damaged_Roughness.png" id="3_rgh"]
+[ext_resource type="Texture2D" path="res://textures/switch/Switch_Damaged_Metallic.png" id="4_met"]
+[ext_resource type="Texture2D" path="res://textures/switch/Switch_Damaged_AO.png" id="5_ao"]
+
+[resource]
+resource_name = "MAT_Switch_Damaged"
+albedo_texture = ExtResource("1_alb")
+metallic = 1.0
+metallic_texture = ExtResource("4_met")
+roughness = 1.0
+roughness_texture = ExtResource("3_rgh")
+normal_enabled = true
+normal_texture = ExtResource("2_nrm")
+ao_enabled = true
+ao_texture = ExtResource("5_ao")
