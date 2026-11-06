@@ -15,7 +15,6 @@ extends Node
 @export var fade_speed := 40.0      # decibels per second (higher = faster fade)
 
 var _game = null
-var _guard = null
 var _ended := false
 
 
@@ -33,8 +32,6 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if _game == null:
 		_game = get_tree().get_first_node_in_group("game")
-	if _guard == null:
-		_guard = get_tree().get_first_node_in_group("antagonist")
 
 	# Game over (win or lose)
 	if _game and _game.finished:
@@ -47,7 +44,10 @@ func _process(delta: float) -> void:
 		_fade(alert, -80.0, delta)
 		return
 
-	var alerted: bool = _guard != null and _guard.state_name() != "PATROL"
+	var alerted := false
+	for g in get_tree().get_nodes_in_group("antagonist"):
+		if g.state_name() != "PATROL":
+			alerted = true
 
 	if alerted:
 		_fade(bgm, -80.0, delta)

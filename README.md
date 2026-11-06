@@ -12,7 +12,7 @@ switches to open the exit door. The room is dark: only lit lamps expose you. You
 toggle the lamps to create shadows to hide in, or press E on a lamp to make noise
 and lure the guard away from your path.
 
-**Win:** activate both extraction switches, then reach the exit door.
+**Win:** activate both extraction switches, then reach the exit door. Level 1 leads on to Level 2 (see Levels).
 
 **Lose:** the guard hits you down to 0 health (100 HP, 20 damage per hit). Each hit gives you
 1 second of invulnerability (the Protagonist blinks white), plus a red screen flash,
@@ -32,6 +32,15 @@ a spark burst, a hit sound and a short camera shake.
 
 * **Main menu** (`main_menu.tscn`): **Play** starts the game, **Quit** closes it.
 * **Win** ("YOU ESCAPED!") and **Game Over** overlays: **Restart** (or press R) reloads the level, **Main Menu** returns to the start menu.
+
+## Levels
+
+|Level|Scene|Layout|
+|-|-|-|
+|1|`main.tscn`|The original room: 1 guard, 3 lamps, 2 extraction switches.|
+|2 - Warehouse|`level2.tscn`|The expanded warehouse: 3 guards, 6 lamps you can switch off, 4 extraction switches. You start in the dark north-west corner; the switches are in the west corridor, on the south wall, in the south-east nook and on the north-east wall, and the exit is the north door.|
+
+Finishing Level 1 shows **LEVEL COMPLETE** with a **Next Level** button. Finishing Level 2 shows **YOU ESCAPED!**.
 
 ## Two ways to solve it
 
@@ -63,15 +72,16 @@ godot --headless --path . --export-release "Windows Desktop"
 |File|Purpose|
 |-|-|
 |`main_menu.tscn` / `main_menu.gd`|Start menu (Play / Quit)|
-|`main.tscn`|Game scene: room, characters, lamps, switches, exit, HUD, audio|
-|`game.gd`|Game loop: switch counter, exit door, win/lose, HUD text, health bar, "Press E" bubble, Win / Game Over overlay (Restart / Main Menu), hit effects|
+|`main.tscn`|Level 1: room, characters, lamps, switches, exit, HUD, audio|
+|`level2.tscn`|Level 2: warehouse, 3 guards with their own patrol routes, 6 lamps, 4 switches, baked NavMesh|
+|`game.gd`|Game loop: switch counter, exit door, win/lose, HUD text, health bar, "Press E" bubble, Win / Game Over overlay (Next Level / Restart / Main Menu), level hand-over, hit effects|
 |`player.gd`|Protagonist movement, sneaking, interaction, lit/hidden check, health and i-frames, animation states|
 |`antagonist.gd`|Guard AI state machine (patrol, chase, attack, investigate), vision, hearing, navigation|
 |`lamp.gd`|Toggleable light source, line-of-sight lighting check, noise lure|
 |`extraction_switch.gd`|Switch state, dual-state material swap, reports to `game.gd`|
 |`audio.gd`|Background music, detection sound crossfade, victory theme|
 |`export_presets.cfg`|Windows Desktop export preset (embedded PCK, so the build is one .exe)|
-|`Protagonist.glb`, `Antagonist.glb`, `SS_Room.glb`|Models, rigs and animations exported from Blender|
+|`Protagonist.glb`, `Antagonist.glb`, `SS_Room.glb`, `SS_Warehouse.glb`, `SS_Lamp.glb`|Models, rigs, animations and level maps exported from Blender|
 
 ## Systemic architecture
 
@@ -83,7 +93,9 @@ godot --headless --path . --export-release "Windows Desktop"
 * **Pathfinding:** `NavigationAgent3D` on a baked `NavigationRegion3D`, so the guard walks around obstacles.
 * **Animation state machines:** both characters use an `AnimationTree` with `Idle`, `Walk` and `Action` states, driven from the scripts.
 * **Audio reacts to guard state:** music fades out and the detection sound plays whenever the guard is not on `PATROL`; they swap back when he calms down.
-* **UI is built in code** (`game.gd`): HUD text, health bar, the "Press E" bubble that follows the lamp or switch, and the Win / Game Over overlay.
+* **UI is built in code** (`game.gd`): HUD text, health bar, the "Press E" bubble that follows the lamp or switch, and the Win / Game Over overlay (with a Next Level button between levels).
+* **Several guards:** every guard has its own `Waypoints` node and `NavigationAgent3D`. A lamp noise reaches all guards in range, the HUD shows the most alert guard, and the music reacts to any guard.
+* **Level 2 map:** `SS_Warehouse.glb` gets its colliders on import from the `-col` suffix on the Blender object names; the NavMesh is baked from them (limited to the building by a Baking AABB) and the lamps are children of the `NavigationRegion3D`, so the bake routes around them.
 
 ## Asset pipeline
 

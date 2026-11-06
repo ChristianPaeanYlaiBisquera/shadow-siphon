@@ -552,6 +552,8 @@ size = Vector3(3, 3, 2)
 
 [node name="Main" type="Node3D" unique_id=304549176 node_paths=PackedStringArray("exit_door", "exit_area", "hud_label", "message_label")]
 script = ExtResource("1_h2yge")
+level_name = "Level 1"
+next_level = "res://level2.tscn"
 exit_door = NodePath("NavigationRegion3D/SS_Room/DOOR_Exit")
 exit_area = NodePath("ExitArea")
 hud_label = NodePath("UI/HUD")

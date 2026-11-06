@@ -1,0 +1,586 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://game.gd" id="1_game"]
+[ext_resource type="PackedScene" path="res://SS_Warehouse.glb" id="2_wh"]
+[ext_resource type="PackedScene" path="res://Protagonist.glb" id="3_pro"]
+[ext_resource type="Script" path="res://player.gd" id="4_player"]
+[ext_resource type="PackedScene" path="res://Antagonist.glb" id="5_ant"]
+[ext_resource type="Script" path="res://antagonist.gd" id="6_guard"]
+[ext_resource type="Script" path="res://lamp.gd" id="7_lamp"]
+[ext_resource type="Script" path="res://extraction_switch.gd" id="8_switch"]
+[ext_resource type="Script" path="res://audio.gd" id="9_audio"]
+[ext_resource type="AudioStream" path="res://Stealth Music - Hunter [JiAlZIW7hsQ].mp3" id="10_bgm"]
+[ext_resource type="AudioStream" path="res://Metal Gear Solid Snake 1 Theme (with alert) [7tWNnGrSOPo].mp3" id="11_alert"]
+[ext_resource type="AudioStream" path="res://Final Fantasy VII - Victory Fanfare [HD] [rgUksX6eM0Y].mp3" id="12_victory"]
+[ext_resource type="PackedScene" path="res://SS_Lamp.glb" id="13_lampglb"]
+[ext_resource type="StandardMaterial3D" path="res://materials/Switch_Damaged.tres" id="14_swd"]
+[ext_resource type="StandardMaterial3D" path="res://materials/Switch_Pristine.tres" id="15_swp"]
+[ext_resource type="StandardMaterial3D" path="res://materials/Lamp_On.tres" id="16_lon"]
+[ext_resource type="StandardMaterial3D" path="res://materials/Lamp_Off.tres" id="17_loff"]
+
+[sub_resource type="CapsuleShape3D" id="Capsule_body"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="BoxShape3D" id="Box_exit"]
+size = Vector3(3, 3, 2)
+
+[sub_resource type="BoxMesh" id="Box_plate"]
+size = Vector3(0.95, 1.2, 0.06)
+
+[sub_resource type="BoxMesh" id="Box_panel"]
+size = Vector3(0.5, 0.75, 0.04)
+
+[sub_resource type="BoxMesh" id="Box_lever"]
+size = Vector3(0.14, 0.26, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_dark_metal"]
+albedo_color = Color(0.07, 0.075, 0.082, 1)
+metallic = 0.55
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="Mat_lever"]
+albedo_color = Color(0.33, 0.34, 0.36, 1)
+metallic = 0.4
+roughness = 0.4
+
+[sub_resource type="AnimationNodeAnimation" id="P_Idle"]
+animation = &"Protagonist_Idle"
+
+[sub_resource type="AnimationNodeAnimation" id="P_Walk"]
+animation = &"Protagonist_Walk"
+
+[sub_resource type="AnimationNodeAnimation" id="P_Action"]
+animation = &"Protagonist_ShadowAction"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="P_T0"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="P_T1"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="P_T2"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="P_T3"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="P_T4"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="P_T5"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="P_T6"]
+
+[sub_resource type="AnimationNodeStateMachine" id="SM_P"]
+states/Action/node = SubResource("P_Action")
+states/Action/position = Vector2(509, 100)
+states/Idle/node = SubResource("P_Idle")
+states/Idle/position = Vector2(383, 180)
+states/Start/position = Vector2(203, 100)
+states/Walk/node = SubResource("P_Walk")
+states/Walk/position = Vector2(377, 100)
+transitions = ["Start", "Idle", SubResource("P_T0"), "Idle", "Walk", SubResource("P_T1"), "Walk", "Idle", SubResource("P_T2"), "Walk", "Action", SubResource("P_T3"), "Action", "Idle", SubResource("P_T4"), "Action", "Walk", SubResource("P_T5"), "Idle", "Action", SubResource("P_T6")]
+graph_offset = Vector2(114, -27)
+
+[sub_resource type="AnimationNodeAnimation" id="G1_Idle"]
+animation = &"Antagonist_Idle"
+
+[sub_resource type="AnimationNodeAnimation" id="G1_Walk"]
+animation = &"Antagonist_Walk"
+
+[sub_resource type="AnimationNodeAnimation" id="G1_Action"]
+animation = &"Antagonist_Action"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="G1_T0"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="G1_T1"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="G1_T2"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="G1_T3"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="G1_T4"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="G1_T5"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="G1_T6"]
+
+[sub_resource type="AnimationNodeStateMachine" id="SM_G1"]
+states/Action/node = SubResource("G1_Action")
+states/Action/position = Vector2(509, 100)
+states/Idle/node = SubResource("G1_Idle")
+states/Idle/position = Vector2(383, 180)
+states/Start/position = Vector2(203, 100)
+states/Walk/node = SubResource("G1_Walk")
+states/Walk/position = Vector2(377, 100)
+transitions = ["Start", "Idle", SubResource("G1_T0"), "Idle", "Walk", SubResource("G1_T1"), "Walk", "Idle", SubResource("G1_T2"), "Walk", "Action", SubResource("G1_T3"), "Action", "Idle", SubResource("G1_T4"), "Action", "Walk", SubResource("G1_T5"), "Idle", "Action", SubResource("G1_T6")]
+graph_offset = Vector2(114, -27)
+
+[sub_resource type="AnimationNodeAnimation" id="G2_Idle"]
+animation = &"Antagonist_Idle"
+
+[sub_resource type="AnimationNodeAnimation" id="G2_Walk"]
+animation = &"Antagonist_Walk"
+
+[sub_resource type="AnimationNodeAnimation" id="G2_Action"]
+animation = &"Antagonist_Action"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="G2_T0"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="G2_T1"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="G2_T2"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="G2_T3"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="G2_T4"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="G2_T5"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="G2_T6"]
+
+[sub_resource type="AnimationNodeStateMachine" id="SM_G2"]
+states/Action/node = SubResource("G2_Action")
+states/Action/position = Vector2(509, 100)
+states/Idle/node = SubResource("G2_Idle")
+states/Idle/position = Vector2(383, 180)
+states/Start/position = Vector2(203, 100)
+states/Walk/node = SubResource("G2_Walk")
+states/Walk/position = Vector2(377, 100)
+transitions = ["Start", "Idle", SubResource("G2_T0"), "Idle", "Walk", SubResource("G2_T1"), "Walk", "Idle", SubResource("G2_T2"), "Walk", "Action", SubResource("G2_T3"), "Action", "Idle", SubResource("G2_T4"), "Action", "Walk", SubResource("G2_T5"), "Idle", "Action", SubResource("G2_T6")]
+graph_offset = Vector2(114, -27)
+
+[sub_resource type="AnimationNodeAnimation" id="G3_Idle"]
+animation = &"Antagonist_Idle"
+
+[sub_resource type="AnimationNodeAnimation" id="G3_Walk"]
+animation = &"Antagonist_Walk"
+
+[sub_resource type="AnimationNodeAnimation" id="G3_Action"]
+animation = &"Antagonist_Action"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="G3_T0"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="G3_T1"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="G3_T2"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="G3_T3"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="G3_T4"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="G3_T5"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="G3_T6"]
+
+[sub_resource type="AnimationNodeStateMachine" id="SM_G3"]
+states/Action/node = SubResource("G3_Action")
+states/Action/position = Vector2(509, 100)
+states/Idle/node = SubResource("G3_Idle")
+states/Idle/position = Vector2(383, 180)
+states/Start/position = Vector2(203, 100)
+states/Walk/node = SubResource("G3_Walk")
+states/Walk/position = Vector2(377, 100)
+transitions = ["Start", "Idle", SubResource("G3_T0"), "Idle", "Walk", SubResource("G3_T1"), "Walk", "Idle", SubResource("G3_T2"), "Walk", "Action", SubResource("G3_T3"), "Action", "Idle", SubResource("G3_T4"), "Action", "Walk", SubResource("G3_T5"), "Idle", "Action", SubResource("G3_T6")]
+graph_offset = Vector2(114, -27)
+
+[sub_resource type="NavigationMesh" id="NavMesh_L2"]
+vertices = PackedVector3Array(-8.6, 0.3, 4.9, -8.35, 0.3, 5.65, -7.35, 0.3, 5.4, -7.1, 0.3, 4.65, -8.6, 0.3, 2.15, -9.6, 0.3, 2.65, -12.1, 0.3, -0.1, -13.35, 0.3, 0.4, -13.35, 0.3, 0.9, -11.85, 0.3, 1.15, -11.6, 0.3, 0.9, -9.6, 0.3, -3.85, -9.85, 0.3, -2.35, -8.35, 0.3, -0.85, -6.1, 0.3, 0.15, -3.85, 0.3, -1.85, -3.6, 0.3, -3.85, -4.6, 0.3, -0.1, -10.35, 0.3, 0.9, -11.85, 0.3, 2.65, -10.1, 0.3, 2.15, -10.1, 0.3, -1.35, -9.85, 0.3, -0.85, -2.35, 0.3, -0.6, -2.35, 0.3, -1.6, -4.35, 0.3, 0.4, -9.85, 0.3, 5.15, -6.1, 0.3, 4.65, -12.6, 0.3, -2.1, -12.35, 0.3, -1.1, -0.35, 0.3, -0.1, 0.4, 0.3, -0.1, 0.65, 0.3, -0.6, -0.6, 0.3, -2.1, -1.6, 0.3, -3.85, -2.35, 0.3, -3.35, -2.1, 0.3, -2.35, 3.4, 0.3, -0.6, 3.65, 0.3, 0.4, 4.9, 0.3, 0.4, 4.9, 0.3, -2.1, 3.4, 0.3, -2.35, 3.65, 0.3, -3.85, -0.6, 0.3, 0.4, 0.65, 0.3, 1.15, -2.1, 0.3, 0.4, -2.6, 0.3, 4.9, -1.6, 0.3, 4.9, 3.4, 0.3, 1.15, 4.65, 0.3, 5.65, -4.35, 0.3, 5.65, -2.85, 0.3, 5.65, -1.35, 0.3, 5.65, -1.35, 0.3, 9.15, -2.1, 0.3, 9.4, -2.1, 0.3, 9.9, -0.6, 0.3, 9.65, 0.65, 0.3, 9.4, 3.9, 0.3, 9.9, 3.9, 0.3, 9.15, 3.4, 0.3, 8.15, 1.65, 0.3, 8.15, 0.4, 0.3, 8.4, 1.4, 0.3, 7.4, 0.65, 0.3, 7.4, -8.6, 0.3, 7.9, -8.6, 0.3, 9.4, -6.6, 0.3, 9.65, -5.85, 0.3, 9.15, -6.1, 0.3, 6.4, -7.1, 0.3, 6.4, 4.15, 0.3, 10.9, 4.9, 0.3, 10.9, 4.9, 0.3, 9.15, -6.35, 0.3, 10.9, -3.85, 0.3, 10.15, -3.85, 0.3, 8.9, -4.35, 0.3, 8.9, -2.1, 0.3, 10.9, -2.1, 0.3, 10.15, -1.85, 0.3, 7.15, -1.85, 0.3, 6.4, -2.85, 0.3, 6.15, -8.6, 0.3, 6.4, -2.6, 0.3, 7.9, -2.85, 0.3, 8.65, -0.1, 0.3, 10.9, 0.4, 0.3, 10.9, -1.35, 0.3, 8.15, -0.85, 0.3, 8.4, -1.1, 0.3, 7.4, -9.6, 0.3, 6.4, -9.85, 0.3, 8.15, -10.1, 0.3, 10.9, -10.1, 0.3, 9.9, -11.6, 0.3, 9.65, -12.1, 0.3, 10.65)
+polygons = [PackedInt32Array(2, 1, 0), PackedInt32Array(2, 0, 3), PackedInt32Array(3, 0, 5), PackedInt32Array(3, 5, 4), PackedInt32Array(10, 9, 6), PackedInt32Array(6, 9, 7), PackedInt32Array(7, 9, 8), PackedInt32Array(12, 11, 13), PackedInt32Array(13, 11, 14), PackedInt32Array(14, 11, 15), PackedInt32Array(15, 11, 16), PackedInt32Array(15, 17, 14), PackedInt32Array(10, 18, 9), PackedInt32Array(9, 18, 20), PackedInt32Array(9, 20, 19), PackedInt32Array(21, 12, 22), PackedInt32Array(22, 12, 13), PackedInt32Array(24, 23, 15), PackedInt32Array(15, 23, 17), PackedInt32Array(17, 23, 25), PackedInt32Array(0, 26, 5), PackedInt32Array(3, 4, 27), PackedInt32Array(27, 4, 14), PackedInt32Array(14, 4, 13), PackedInt32Array(4, 5, 20), PackedInt32Array(20, 5, 19), PackedInt32Array(29, 28, 21), PackedInt32Array(21, 28, 12), PackedInt32Array(31, 30, 32), PackedInt32Array(32, 30, 33), PackedInt32Array(35, 34, 36), PackedInt32Array(36, 34, 33), PackedInt32Array(38, 37, 39), PackedInt32Array(39, 37, 40), PackedInt32Array(40, 37, 41), PackedInt32Array(41, 37, 32), PackedInt32Array(33, 34, 32), PackedInt32Array(32, 34, 41), PackedInt32Array(41, 34, 42), PackedInt32Array(30, 31, 43), PackedInt32Array(43, 31, 44), PackedInt32Array(43, 44, 45), PackedInt32Array(45, 44, 47), PackedInt32Array(45, 47, 46), PackedInt32Array(38, 39, 48), PackedInt32Array(48, 39, 49), PackedInt32Array(51, 50, 46), PackedInt32Array(46, 50, 25), PackedInt32Array(46, 25, 45), PackedInt32Array(45, 25, 23), PackedInt32Array(47, 44, 52), PackedInt32Array(52, 44, 48), PackedInt32Array(52, 48, 49), PackedInt32Array(54, 53, 55), PackedInt32Array(55, 53, 56), PackedInt32Array(59, 58, 60), PackedInt32Array(60, 58, 61), PackedInt32Array(61, 58, 57), PackedInt32Array(61, 57, 62), PackedInt32Array(63, 61, 64), PackedInt32Array(64, 61, 62), PackedInt32Array(67, 66, 68), PackedInt32Array(68, 66, 65), PackedInt32Array(68, 65, 70), PackedInt32Array(68, 70, 69), PackedInt32Array(59, 73, 58), PackedInt32Array(58, 73, 71), PackedInt32Array(71, 73, 72), PackedInt32Array(76, 75, 77), PackedInt32Array(77, 75, 68), PackedInt32Array(68, 75, 67), PackedInt32Array(67, 75, 74), PackedInt32Array(79, 78, 75), PackedInt32Array(75, 78, 74), PackedInt32Array(82, 81, 80), PackedInt32Array(1, 2, 83), PackedInt32Array(83, 2, 70), PackedInt32Array(83, 70, 65), PackedInt32Array(76, 77, 84), PackedInt32Array(84, 77, 80), PackedInt32Array(80, 77, 82), PackedInt32Array(82, 77, 50), PackedInt32Array(50, 51, 82), PackedInt32Array(84, 85, 76), PackedInt32Array(86, 56, 87), PackedInt32Array(87, 56, 57), PackedInt32Array(84, 80, 88), PackedInt32Array(89, 88, 90), PackedInt32Array(90, 88, 80), PackedInt32Array(88, 89, 53), PackedInt32Array(53, 89, 56), PackedInt32Array(56, 89, 57), PackedInt32Array(83, 65, 91), PackedInt32Array(91, 65, 92), PackedInt32Array(89, 62, 57), PackedInt32Array(94, 93, 95), PackedInt32Array(95, 93, 96)]
+geometry_parsed_geometry_type = 1
+agent_height = 1.8
+agent_radius = 0.4
+filter_baking_aabb = AABB(-14.1, -0.2, -4.6, 19.7, 2.7, 16.2)
+
+[node name="Level2" type="Node3D" node_paths=PackedStringArray("exit_door", "exit_area", "hud_label", "message_label")]
+script = ExtResource("1_game")
+switches_needed = 4
+level_name = "Level 2 - Warehouse"
+exit_door = NodePath("NavigationRegion3D/SS_Warehouse/DOOR_Exit")
+exit_area = NodePath("ExitArea")
+hud_label = NodePath("UI/HUD")
+message_label = NodePath("UI/Message")
+
+[node name="Player" type="CharacterBody3D" parent="." node_paths=PackedStringArray("model", "anim_tree")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0.2, -2.2)
+script = ExtResource("4_player")
+model = NodePath("Pivot")
+anim_tree = NodePath("AnimationTree")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("Capsule_body")
+
+[node name="Camera3D" type="Camera3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 0.57357645, 0.81915206, 0, -0.81915206, 0.57357645, 0, 7, 5)
+
+[node name="Pivot" type="Node3D" parent="Player"]
+
+[node name="Protagonist" parent="Player/Pivot" instance=ExtResource("3_pro")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1427338, 0, 1.4459248)
+
+[node name="AnimationTree" type="AnimationTree" parent="Player"]
+root_node = NodePath("../Pivot/Protagonist")
+tree_root = SubResource("SM_P")
+anim_player = NodePath("../Pivot/Protagonist/AnimationPlayer")
+
+[node name="Guard1" type="CharacterBody3D" parent="." node_paths=PackedStringArray("model", "anim_tree", "waypoints_root", "nav_agent")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.3, 0, 8)
+script = ExtResource("6_guard")
+model = NodePath("Pivot")
+anim_tree = NodePath("AnimationTree")
+waypoints_root = NodePath("../Waypoints1")
+nav_agent = NodePath("NavigationAgent3D")
+
+[node name="Pivot" type="Node3D" parent="Guard1"]
+
+[node name="Antagonist" parent="Guard1/Pivot" instance=ExtResource("5_ant")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.2, 0, 1.5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Guard1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("Capsule_body")
+
+[node name="AnimationTree" type="AnimationTree" parent="Guard1"]
+root_node = NodePath("../Pivot/Antagonist")
+tree_root = SubResource("SM_G1")
+anim_player = NodePath("../Pivot/Antagonist/AnimationPlayer")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="Guard1"]
+
+[node name="Waypoints1" type="Node3D" parent="."]
+
+[node name="W1" type="Marker3D" parent="Waypoints1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.3, 0.2, 8)
+
+[node name="W2" type="Marker3D" parent="Waypoints1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0.2, 8)
+
+[node name="W3" type="Marker3D" parent="Waypoints1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0.2, 2)
+
+[node name="W4" type="Marker3D" parent="Waypoints1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0.2, -1)
+
+[node name="W5" type="Marker3D" parent="Waypoints1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.3, 0.2, -1)
+
+[node name="W6" type="Marker3D" parent="Waypoints1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.3, 0.2, 4.65)
+
+[node name="Guard2" type="CharacterBody3D" parent="." node_paths=PackedStringArray("model", "anim_tree", "waypoints_root", "nav_agent")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, -3)
+script = ExtResource("6_guard")
+model = NodePath("Pivot")
+anim_tree = NodePath("AnimationTree")
+waypoints_root = NodePath("../Waypoints2")
+nav_agent = NodePath("NavigationAgent3D")
+
+[node name="Pivot" type="Node3D" parent="Guard2"]
+
+[node name="Antagonist" parent="Guard2/Pivot" instance=ExtResource("5_ant")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.2, 0, 1.5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Guard2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("Capsule_body")
+
+[node name="AnimationTree" type="AnimationTree" parent="Guard2"]
+root_node = NodePath("../Pivot/Antagonist")
+tree_root = SubResource("SM_G2")
+anim_player = NodePath("../Pivot/Antagonist/AnimationPlayer")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="Guard2"]
+
+[node name="Waypoints2" type="Node3D" parent="."]
+
+[node name="W1" type="Marker3D" parent="Waypoints2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0.2, -3)
+
+[node name="W2" type="Marker3D" parent="Waypoints2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.2, 0.2, 3)
+
+[node name="W3" type="Marker3D" parent="Waypoints2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.2, 4.5)
+
+[node name="W4" type="Marker3D" parent="Waypoints2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0.2, 2.5)
+
+[node name="W5" type="Marker3D" parent="Waypoints2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0.2, -1)
+
+[node name="W6" type="Marker3D" parent="Waypoints2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -3)
+
+[node name="Guard3" type="CharacterBody3D" parent="." node_paths=PackedStringArray("model", "anim_tree", "waypoints_root", "nav_agent")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 10.4)
+script = ExtResource("6_guard")
+model = NodePath("Pivot")
+anim_tree = NodePath("AnimationTree")
+waypoints_root = NodePath("../Waypoints3")
+nav_agent = NodePath("NavigationAgent3D")
+
+[node name="Pivot" type="Node3D" parent="Guard3"]
+
+[node name="Antagonist" parent="Guard3/Pivot" instance=ExtResource("5_ant")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.2, 0, 1.5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Guard3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("Capsule_body")
+
+[node name="AnimationTree" type="AnimationTree" parent="Guard3"]
+root_node = NodePath("../Pivot/Antagonist")
+tree_root = SubResource("SM_G3")
+anim_player = NodePath("../Pivot/Antagonist/AnimationPlayer")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="Guard3"]
+
+[node name="Waypoints3" type="Node3D" parent="."]
+
+[node name="W1" type="Marker3D" parent="Waypoints3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.2, 10.4)
+
+[node name="W2" type="Marker3D" parent="Waypoints3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, 0.2, 9.4)
+
+[node name="W3" type="Marker3D" parent="Waypoints3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.2, 8.4)
+
+[node name="W4" type="Marker3D" parent="Waypoints3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.2, 8)
+
+[node name="W5" type="Marker3D" parent="Waypoints3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0.2, 9.4)
+
+[node name="W6" type="Marker3D" parent="Waypoints3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.2, 0.2, 10.4)
+
+[node name="W7" type="Marker3D" parent="Waypoints3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 10)
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+navigation_mesh = SubResource("NavMesh_L2")
+
+[node name="SS_Warehouse" parent="NavigationRegion3D" instance=ExtResource("2_wh")]
+
+[node name="Lamp1" type="Node3D" parent="NavigationRegion3D" node_paths=PackedStringArray("light", "bulb")]
+transform = Transform3D(0.3907, 0, 0.9205, 0, 1, 0, -0.9205, 0, 0.3907, 1.3, 0, 0.3)
+script = ExtResource("7_lamp")
+light = NodePath("OmniLight3D")
+bulb = NodePath("Prop/PROP_Lamp")
+mat_on = ExtResource("16_lon")
+mat_off = ExtResource("17_loff")
+prompt_height = 2.2
+
+[node name="Prop" parent="NavigationRegion3D/Lamp1" instance=ExtResource("13_lampglb")]
+
+[node name="OmniLight3D" type="OmniLight3D" parent="NavigationRegion3D/Lamp1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+light_energy = 2.0
+shadow_enabled = true
+
+[node name="Lamp2" type="Node3D" parent="NavigationRegion3D" node_paths=PackedStringArray("light", "bulb")]
+transform = Transform3D(-0.6947, 0, 0.7193, 0, 1, 0, -0.7193, 0, -0.6947, -6.4, 0, 5.5)
+script = ExtResource("7_lamp")
+light = NodePath("OmniLight3D")
+bulb = NodePath("Prop/PROP_Lamp")
+mat_on = ExtResource("16_lon")
+mat_off = ExtResource("17_loff")
+prompt_height = 2.2
+
+[node name="Prop" parent="NavigationRegion3D/Lamp2" instance=ExtResource("13_lampglb")]
+
+[node name="OmniLight3D" type="OmniLight3D" parent="NavigationRegion3D/Lamp2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+light_energy = 2.0
+shadow_enabled = true
+
+[node name="Lamp3" type="Node3D" parent="NavigationRegion3D" node_paths=PackedStringArray("light", "bulb")]
+transform = Transform3D(-0.9336, 0, -0.3584, 0, 1, 0, 0.3584, 0, -0.9336, -3, 0, 9.6)
+script = ExtResource("7_lamp")
+light = NodePath("OmniLight3D")
+bulb = NodePath("Prop/PROP_Lamp")
+mat_on = ExtResource("16_lon")
+mat_off = ExtResource("17_loff")
+prompt_height = 2.2
+
+[node name="Prop" parent="NavigationRegion3D/Lamp3" instance=ExtResource("13_lampglb")]
+
+[node name="OmniLight3D" type="OmniLight3D" parent="NavigationRegion3D/Lamp3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+light_energy = 2.0
+shadow_enabled = true
+
+[node name="Lamp4" type="Node3D" parent="NavigationRegion3D" node_paths=PackedStringArray("light", "bulb")]
+transform = Transform3D(-0.0349, 0, -0.9994, 0, 1, 0, 0.9994, 0, -0.0349, -0.2, 0, 7.5)
+script = ExtResource("7_lamp")
+light = NodePath("OmniLight3D")
+bulb = NodePath("Prop/PROP_Lamp")
+mat_on = ExtResource("16_lon")
+mat_off = ExtResource("17_loff")
+prompt_height = 2.2
+
+[node name="Prop" parent="NavigationRegion3D/Lamp4" instance=ExtResource("13_lampglb")]
+
+[node name="OmniLight3D" type="OmniLight3D" parent="NavigationRegion3D/Lamp4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+light_energy = 2.0
+shadow_enabled = true
+
+[node name="Lamp5" type="Node3D" parent="NavigationRegion3D" node_paths=PackedStringArray("light", "bulb")]
+transform = Transform3D(0.9063, 0, -0.4226, 0, 1, 0, 0.4226, 0, 0.9063, 4.2, 0, -3)
+script = ExtResource("7_lamp")
+light = NodePath("OmniLight3D")
+bulb = NodePath("Prop/PROP_Lamp")
+mat_on = ExtResource("16_lon")
+mat_off = ExtResource("17_loff")
+prompt_height = 2.2
+
+[node name="Prop" parent="NavigationRegion3D/Lamp5" instance=ExtResource("13_lampglb")]
+
+[node name="OmniLight3D" type="OmniLight3D" parent="NavigationRegion3D/Lamp5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+light_energy = 2.0
+shadow_enabled = true
+
+[node name="Lamp6" type="Node3D" parent="NavigationRegion3D" node_paths=PackedStringArray("light", "bulb")]
+transform = Transform3D(0.7431, 0, 0.6691, 0, 1, 0, -0.6691, 0, 0.7431, -3, 0, -2.5)
+script = ExtResource("7_lamp")
+light = NodePath("OmniLight3D")
+bulb = NodePath("Prop/PROP_Lamp")
+mat_on = ExtResource("16_lon")
+mat_off = ExtResource("17_loff")
+prompt_height = 2.2
+
+[node name="Prop" parent="NavigationRegion3D/Lamp6" instance=ExtResource("13_lampglb")]
+
+[node name="OmniLight3D" type="OmniLight3D" parent="NavigationRegion3D/Lamp6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+light_energy = 2.0
+shadow_enabled = true
+
+[node name="Switch1" type="Node3D" parent="." node_paths=PackedStringArray("mesh")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 5.5, 0, -2)
+script = ExtResource("8_switch")
+mesh = NodePath("Panel")
+mat_inactive = ExtResource("14_swd")
+mat_active = ExtResource("15_swp")
+prompt_height = 2.1
+
+[node name="Plate" type="MeshInstance3D" parent="Switch1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0.03)
+mesh = SubResource("Box_plate")
+surface_material_override/0 = SubResource("Mat_dark_metal")
+
+[node name="Panel" type="MeshInstance3D" parent="Switch1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0.08)
+mesh = SubResource("Box_panel")
+
+[node name="Lever" type="MeshInstance3D" parent="Switch1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0.15)
+mesh = SubResource("Box_lever")
+surface_material_override/0 = SubResource("Mat_lever")
+
+[node name="Switch2" type="Node3D" parent="." node_paths=PackedStringArray("mesh")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 5.5, 0, 9.6)
+script = ExtResource("8_switch")
+mesh = NodePath("Panel")
+mat_inactive = ExtResource("14_swd")
+mat_active = ExtResource("15_swp")
+prompt_height = 2.1
+
+[node name="Plate" type="MeshInstance3D" parent="Switch2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0.03)
+mesh = SubResource("Box_plate")
+surface_material_override/0 = SubResource("Mat_dark_metal")
+
+[node name="Panel" type="MeshInstance3D" parent="Switch2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0.08)
+mesh = SubResource("Box_panel")
+
+[node name="Lever" type="MeshInstance3D" parent="Switch2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0.15)
+mesh = SubResource("Box_lever")
+surface_material_override/0 = SubResource("Mat_lever")
+
+[node name="Switch3" type="Node3D" parent="." node_paths=PackedStringArray("mesh")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -5, 0, 11.5)
+script = ExtResource("8_switch")
+mesh = NodePath("Panel")
+mat_inactive = ExtResource("14_swd")
+mat_active = ExtResource("15_swp")
+prompt_height = 2.1
+
+[node name="Plate" type="MeshInstance3D" parent="Switch3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0.03)
+mesh = SubResource("Box_plate")
+surface_material_override/0 = SubResource("Mat_dark_metal")
+
+[node name="Panel" type="MeshInstance3D" parent="Switch3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0.08)
+mesh = SubResource("Box_panel")
+
+[node name="Lever" type="MeshInstance3D" parent="Switch3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0.15)
+mesh = SubResource("Box_lever")
+surface_material_override/0 = SubResource("Mat_lever")
+
+[node name="Switch4" type="Node3D" parent="." node_paths=PackedStringArray("mesh")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -5.45, 0, 4)
+script = ExtResource("8_switch")
+mesh = NodePath("Panel")
+mat_inactive = ExtResource("14_swd")
+mat_active = ExtResource("15_swp")
+prompt_height = 2.1
+
+[node name="Plate" type="MeshInstance3D" parent="Switch4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0.03)
+mesh = SubResource("Box_plate")
+surface_material_override/0 = SubResource("Mat_dark_metal")
+
+[node name="Panel" type="MeshInstance3D" parent="Switch4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0.08)
+mesh = SubResource("Box_panel")
+
+[node name="Lever" type="MeshInstance3D" parent="Switch4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0.15)
+mesh = SubResource("Box_lever")
+surface_material_override/0 = SubResource("Mat_lever")
+
+[node name="ExitArea" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ExitArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3, 1.5, -5.2)
+shape = SubResource("Box_exit")
+
+[node name="Audio" type="Node" parent="." node_paths=PackedStringArray("bgm", "alert", "victory")]
+script = ExtResource("9_audio")
+bgm = NodePath("BGM")
+alert = NodePath("Alert")
+victory = NodePath("Victory")
+
+[node name="BGM" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("10_bgm")
+
+[node name="Alert" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("11_alert")
+
+[node name="Victory" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("12_victory")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="HUD" type="Label" parent="UI"]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 60.0
+offset_bottom = 51.0
+theme_override_font_sizes/font_size = 22
+
+[node name="Message" type="Label" parent="UI"]
+offset_left = 300.0
+offset_top = 250.0
+offset_right = 340.0
+offset_bottom = 305.0
+theme_override_font_sizes/font_size = 40

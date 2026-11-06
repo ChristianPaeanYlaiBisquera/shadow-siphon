@@ -14,6 +14,8 @@ const HIT_SOUND := preload("res://undertale-attack-hit-sound-effect.mp3")
 @export var message_label: Label
 @export var health_bar: ProgressBar    # optional: bar showing the player's health
 @export var damage_flash: ColorRect    # optional: red full-screen rectangle that flashes when hit
+@export var level_name := ""                     # shown at the top of the HUD
+@export_file("*.tscn") var next_level := ""      # loaded from the win screen; leave empty on the last level
 
 var switches_done := 0
 var exit_open := false
@@ -36,6 +38,7 @@ var _hp_shown := 100.0
 var _end_root: Control
 var _end_title: Label
 var _restart_btn: Button
+var _next_btn: Button
 
 
 func _enter_tree() -> void:
@@ -63,12 +66,18 @@ func _process(delta: float) -> void:
 	_update_health_bar(p, delta)
 	if hud_label == null:
 		return
-	var a = get_tree().get_first_node_in_group("antagonist")
+	var guards := get_tree().get_nodes_in_group("antagonist")
 	var txt := "Switches: %d / %d" % [switches_done, switches_needed]
+	if level_name != "":
+		txt = level_name + "\n" + txt
 	if p:
 		txt += "\nYou are: " + ("LIT" if p.is_lit else "HIDDEN")
-	if a:
-		txt += "\nGuard: " + a.state_name()
+	if not guards.is_empty():
+		var worst = guards[0]
+		for g in guards:
+			if g.state > worst.state:       # PATROL < INVESTIGATE < CHASE < ATTACK
+				worst = g
+		txt += "\nGuard%s: %s" % ["s" if guards.size() > 1 else "", worst.state_name()]
 	if exit_open:
 		txt += "\nEXIT OPEN - GO!"
 	hud_label.text = txt
@@ -318,7 +327,10 @@ func win() -> void:
 	finished = true
 	won = true
 	_stop_player()
-	_show_end("YOU ESCAPED!", Color(0.4, 1.0, 0.55))
+	if next_level != "":
+		_show_end("LEVEL COMPLETE!", Color(0.4, 1.0, 0.55), true)
+	else:
+		_show_end("YOU ESCAPED!", Color(0.4, 1.0, 0.55))
 
 
 func lose() -> void:
@@ -335,6 +347,10 @@ func restart() -> void:
 
 func go_to_menu() -> void:
 	get_tree().change_scene_to_file(MAIN_MENU)
+
+
+func go_next_level() -> void:
+	get_tree().change_scene_to_file(next_level)
 
 
 # ---------------- WIN / GAME OVER OVERLAY ----------------
@@ -362,6 +378,8 @@ func _build_end_ui() -> void:
 	_end_title.add_theme_font_size_override("font_size", 64)
 	box.add_child(_end_title)
 
+	_next_btn = _end_button("Next Level", go_next_level, box)
+	_next_btn.visible = false
 	_restart_btn = _end_button("Restart (R)", restart, box)
 	_end_button("Main Menu", go_to_menu, box)
 
@@ -376,11 +394,12 @@ func _end_button(text: String, on_press: Callable, parent: Control) -> Button:
 	return b
 
 
-func _show_end(title: String, color: Color) -> void:
+func _show_end(title: String, color: Color, next := false) -> void:
 	_end_title.text = title
 	_end_title.add_theme_color_override("font_color", color)
 	_end_root.visible = true
-	_restart_btn.grab_focus()
+	_next_btn.visible = next
+	(_next_btn if next else _restart_btn).grab_focus()
 
 
 func _stop_player() -> void:
