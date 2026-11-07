@@ -9,7 +9,7 @@ extends Node
 @export var bgm: AudioStreamPlayer
 @export var alert: AudioStreamPlayer
 @export var victory: AudioStreamPlayer
-@export var bgm_db := -8.0
+@export var bgm_db := -5.0
 @export var alert_db := -4.0
 @export var victory_db := -2.0
 @export var fade_speed := 40.0      # decibels per second (higher = faster fade)
@@ -19,6 +19,10 @@ var _ended := false
 
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS     # the music keeps playing while the game is paused
+	for p in [bgm, alert, victory]:
+		if p:
+			p.bus = &"Music"                    # the Music volume slider (Settings) controls this bus
 	if bgm:
 		bgm.volume_db = bgm_db
 		bgm.play()

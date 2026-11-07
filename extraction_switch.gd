@@ -3,6 +3,9 @@ extends Node3D
 ## Children: MeshInstance3D, AudioStreamPlayer3D, GPUParticles3D (one-shot)
 ## Press E near it to activate. When all switches are active the exit opens.
 
+const CLICK_SOUND := preload("res://button-click.mp3")
+const CLICK_START := 0.15        # the clip begins with 0.16 s of silence, so skip it
+
 @export var mesh: MeshInstance3D
 @export var mat_inactive: Material   # PBR state A (e.g. dull / dark)
 @export var mat_active: Material     # PBR state B (e.g. glowing / green)
@@ -35,6 +38,7 @@ func interact() -> void:
 		burst.emitting = true
 	var g = get_tree().get_first_node_in_group("game")
 	if g:
+		g.play_sfx(CLICK_SOUND, 0.0, CLICK_START)
 		g.switch_activated()
 
 

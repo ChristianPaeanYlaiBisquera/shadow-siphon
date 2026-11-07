@@ -3,6 +3,8 @@ extends Node3D
 ## Children: OmniLight3D, MeshInstance3D (bulb/lampshade), AudioStreamPlayer3D, GPUParticles3D (one-shot)
 ## Press E near it: the light toggles AND the guard hears it and goes to investigate (distraction).
 
+const SWITCH_SOUND := preload("res://168860__orginaljun__light-switch-01.mp3")
+
 @export var start_on := true
 @export var radius := 6.0
 @export var noise_range := 14.0
@@ -31,6 +33,9 @@ func _ready() -> void:
 
 func interact() -> void:
 	set_on(not is_on)
+	var g = get_tree().get_first_node_in_group("game")
+	if g:
+		g.play_sfx(SWITCH_SOUND, -3.0)       # the clip peaks at 0 dB, so trim it a little
 	for a in get_tree().get_nodes_in_group("antagonist"):
 		a.hear_noise(global_position, noise_range)
 

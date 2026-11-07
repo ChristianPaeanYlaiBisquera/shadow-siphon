@@ -45,6 +45,13 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "Play"
 
+[node name="HowTo" type="Button" parent="Center/Box"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(260, 56)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "How to Play"
+
 [node name="Quit" type="Button" parent="Center/Box"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(260, 56)

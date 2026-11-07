@@ -6,6 +6,8 @@ extends Node3D
 
 const MAIN_MENU := "res://main_menu.tscn"
 const HIT_SOUND := preload("res://undertale-attack-hit-sound-effect.mp3")
+const DOOR_SOUND := preload("res://scifi-door-opening.mp3")
+const PauseMenu := preload("res://pause_menu.gd")
 
 @export var switches_needed := 2
 @export var exit_door: Node3D       # StaticBody3D that blocks the exit (slides down when opened)
@@ -21,6 +23,8 @@ var switches_done := 0
 var exit_open := false
 var finished := false
 var won := false
+var _freeze_count := 0           # hit-stops in progress
+var _freeze_scale := 1.0         # the time scale to go back to
 
 # "Press E" bubble (built in code, shown by player.gd)
 var _prompt_root: VBoxContainer
@@ -45,10 +49,18 @@ func _enter_tree() -> void:
 	add_to_group("game")
 
 
+func _exit_tree() -> void:
+	if _freeze_count > 0:
+		Engine.time_scale = _freeze_scale     # leaving the level in the middle of a freeze must not leave the game slowed
+
+
 func _ready() -> void:
 	_build_health_ui()
 	_build_prompt_ui()
 	_build_end_ui()
+	var pause_menu := PauseMenu.new()
+	pause_menu.name = "PauseMenu"
+	add_child(pause_menu)
 	if exit_area:
 		exit_area.body_entered.connect(_on_exit_body_entered)
 	if message_label:
@@ -91,10 +103,22 @@ func switch_activated() -> void:
 
 func _open_exit() -> void:
 	exit_open = true
+	play_sfx(DOOR_SOUND, 10.0)         # the clip is quiet (peaks at -13 dB), so it gets a boost
 	if exit_door:
 		var t := create_tween()
 		t.tween_property(exit_door, "position:y", exit_door.position.y - 3.0, 1.0)
 		t.tween_callback(exit_door.queue_free)
+
+
+# One-shot sound that frees itself when it ends. `from` skips leading silence (seconds), `db` trims the level.
+func play_sfx(stream: AudioStream, db := 0.0, from := 0.0) -> void:
+	var sfx := AudioStreamPlayer.new()
+	sfx.stream = stream
+	sfx.volume_db = db
+	sfx.bus = &"SFX"                   # the SFX volume slider (Settings) controls this bus
+	sfx.finished.connect(sfx.queue_free)
+	add_child(sfx)
+	sfx.play(from)
 
 
 func _on_exit_body_entered(body: Node3D) -> void:
@@ -276,8 +300,8 @@ func flash_damage() -> void:
 		t2.tween_property(_hp_root, "modulate", Color(1, 1, 1), 0.35)
 
 
-# Burst of sparks at pos + a hit sound + a short camera shake. Called when the guard's hit lands on the player.
-func hit_effect(pos: Vector3) -> void:
+# Burst of sparks at pos + a hit sound + a short camera shake + hit-stop. Called when a hit lands (guard on player, player on guard).
+func hit_effect(pos: Vector3, shake := 0.25, stop := 0.06) -> void:
 	var sparks := CPUParticles3D.new()
 	sparks.one_shot = true
 	sparks.explosiveness = 1.0
@@ -301,12 +325,22 @@ func hit_effect(pos: Vector3) -> void:
 	add_child(sparks)
 	sparks.global_position = pos
 	sparks.finished.connect(sparks.queue_free)
-	var sfx := AudioStreamPlayer.new()
-	sfx.stream = HIT_SOUND
-	sfx.finished.connect(sfx.queue_free)
-	add_child(sfx)
-	sfx.play()
-	_shake_camera(0.25, 0.35)
+	play_sfx(HIT_SOUND)
+	_shake_camera(shake, 0.35)
+	hit_stop(stop)
+
+
+# Hit-stop (impact freeze): the whole game slows to 5% for a moment so a hit feels heavy. The timer ignores the time scale,
+# so the freeze lasts `seconds` of real time. Overlapping freezes are counted, and the old time scale comes back at the end.
+func hit_stop(seconds: float) -> void:
+	if _freeze_count == 0:
+		_freeze_scale = Engine.time_scale
+	_freeze_count += 1
+	Engine.time_scale = 0.05
+	await get_tree().create_timer(seconds, true, false, true).timeout
+	_freeze_count -= 1
+	if _freeze_count == 0:
+		Engine.time_scale = _freeze_scale
 
 
 func _shake_camera(strength: float, duration: float) -> void:
@@ -378,13 +412,13 @@ func _build_end_ui() -> void:
 	_end_title.add_theme_font_size_override("font_size", 64)
 	box.add_child(_end_title)
 
-	_next_btn = _end_button("Next Level", go_next_level, box)
+	_next_btn = make_button("Next Level", go_next_level, box)
 	_next_btn.visible = false
-	_restart_btn = _end_button("Restart (R)", restart, box)
-	_end_button("Main Menu", go_to_menu, box)
+	_restart_btn = make_button("Restart (R)", restart, box)
+	make_button("Main Menu", go_to_menu, box)
 
 
-func _end_button(text: String, on_press: Callable, parent: Control) -> Button:
+func make_button(text: String, on_press: Callable, parent: Control) -> Button:
 	var b := Button.new()
 	b.text = text
 	b.custom_minimum_size = Vector2(260, 56)
