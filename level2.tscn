@@ -376,7 +376,7 @@ prompt_height = 2.2
 [node name="Prop" parent="NavigationRegion3D/Lamp1" instance=ExtResource("13_lampglb")]
 
 [node name="OmniLight3D" type="OmniLight3D" parent="NavigationRegion3D/Lamp1"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.8, 0)
 light_energy = 2.0
 shadow_enabled = true
 
@@ -392,7 +392,7 @@ prompt_height = 2.2
 [node name="Prop" parent="NavigationRegion3D/Lamp2" instance=ExtResource("13_lampglb")]
 
 [node name="OmniLight3D" type="OmniLight3D" parent="NavigationRegion3D/Lamp2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.8, 0)
 light_energy = 2.0
 shadow_enabled = true
 
@@ -408,7 +408,7 @@ prompt_height = 2.2
 [node name="Prop" parent="NavigationRegion3D/Lamp3" instance=ExtResource("13_lampglb")]
 
 [node name="OmniLight3D" type="OmniLight3D" parent="NavigationRegion3D/Lamp3"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.8, 0)
 light_energy = 2.0
 shadow_enabled = true
 
@@ -424,7 +424,7 @@ prompt_height = 2.2
 [node name="Prop" parent="NavigationRegion3D/Lamp4" instance=ExtResource("13_lampglb")]
 
 [node name="OmniLight3D" type="OmniLight3D" parent="NavigationRegion3D/Lamp4"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.8, 0)
 light_energy = 2.0
 shadow_enabled = true
 
@@ -440,7 +440,7 @@ prompt_height = 2.2
 [node name="Prop" parent="NavigationRegion3D/Lamp5" instance=ExtResource("13_lampglb")]
 
 [node name="OmniLight3D" type="OmniLight3D" parent="NavigationRegion3D/Lamp5"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.8, 0)
 light_energy = 2.0
 shadow_enabled = true
 
@@ -456,7 +456,7 @@ prompt_height = 2.2
 [node name="Prop" parent="NavigationRegion3D/Lamp6" instance=ExtResource("13_lampglb")]
 
 [node name="OmniLight3D" type="OmniLight3D" parent="NavigationRegion3D/Lamp6"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.8, 0)
 light_energy = 2.0
 shadow_enabled = true
 
@@ -505,7 +505,7 @@ mesh = SubResource("Box_lever")
 surface_material_override/0 = SubResource("Mat_lever")
 
 [node name="Switch3" type="Node3D" parent="." node_paths=PackedStringArray("mesh")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -5, 0, 11.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 0, 6.76)
 script = ExtResource("8_switch")
 mesh = NodePath("Panel")
 mat_inactive = ExtResource("14_swd")
