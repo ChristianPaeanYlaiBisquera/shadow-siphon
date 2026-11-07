@@ -90,7 +90,8 @@ godot --headless --path . --export-release "Windows Desktop"
 |`help_panel.gd`|"How to Play" screen (controls, tips, volume sliders), used by the main menu and the pause menu|
 |`settings.gd`|Autoload `Settings`: Music / SFX volumes, applied to the audio buses and saved in `user://settings.cfg`|
 |`default_bus_layout.tres`|Audio buses: Master > Music, SFX|
-|`export_presets.cfg`|Windows Desktop export preset (embedded PCK, so the build is one .exe)|
+|`export_presets.cfg`|Windows Desktop export preset (embedded PCK, so the build is one .exe; `graphify-out/*` and `tests/*` are left out)|
+|`tests/`|Headless test scripts that drive both levels (animation mask, hitbox, AI, pause, settings, sounds); see `tests/README.md`|
 |`Protagonist.glb`, `Antagonist.glb`, `SS_Room.glb`, `SS_Warehouse.glb`, `SS_Lamp.glb`|Models, rigs, animations and level maps exported from Blender|
 
 ## Systemic architecture
@@ -110,6 +111,10 @@ godot --headless --path . --export-release "Windows Desktop"
 * **UI is built in code** (`game.gd`): HUD text, health bar, the "Press E" bubble that follows the lamp or switch, and the Win / Game Over overlay (with a Next Level button between levels).
 * **Several guards:** every guard has its own `Waypoints` node and `NavigationAgent3D`. A lamp noise reaches all guards in range, the HUD shows the most alert guard, and the music reacts to any guard. Guards steer around each other (agent avoidance), fan out around a shared target, head for the nearest walkable point when a target is not on the NavMesh (a lamp's own spot), and skip a waypoint or give up on a spot if they stop making progress.
 * **Level 2 map:** `SS_Warehouse.glb` gets its colliders on import from the `-col` suffix on the Blender object names; the NavMesh is baked from them (limited to the building by a Baking AABB) and the lamps are children of the `NavigationRegion3D`, so the bake routes around them. Its floor and walls reuse Level 1's `Floor.tres` and `MAT_Wall.tres` (set in `SS_Warehouse.glb.import`), with world-space UVs at Level 1's texture scale.
+
+## Automated tests
+
+`tests/` holds ten headless scripts that load the real levels, press keys through the input system and check what happens (for example, that the legs keep walking while the arm swings, that a guard always reaches his attack range, and that the pause menu freezes the game). Run one with `godot --headless --path . --script res://tests/combat_test.gd`; `tests/README.md` lists them all and what a good run prints.
 
 ## Asset pipeline
 
